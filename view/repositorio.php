@@ -1,8 +1,7 @@
 <style type="text/css">
 	#loadRepo
 	{
-		max-height: 420px;
-		overflow: auto;
+		overflow-y: auto;
 	}
 </style>
 <div class="container-fluid">
@@ -48,9 +47,6 @@
 			?>
 		</div>
 		<div class="col-md-7" >
-			<div class="panel-heading text-right">
-				
-			</div>
 			<div id="loadRepo">
 				
 			</div>

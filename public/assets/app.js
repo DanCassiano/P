@@ -13,7 +13,11 @@ $(function(){
 		// • U = updated but unmerged
 		$.each(dados,function(i,v){
 
-			dadosHTML += "<p class=\"list-group-item\">" + getIcone( v.status )  + v.arq + "</p>";
+			var icone2 = "";
+				if( v.status.charAt(0) != v.status.charAt(1))
+					icone2 = v.status;
+
+			dadosHTML += "<p class=\"list-group-item\" data-statuc='" + v.status + "'>" + getIcone( v.status ) + getIcone( icone2, 1 )  + v.arq + "</p>";
 		});
 		$("#loadRepo").html( dadosHTML );
 	},'json')
@@ -22,7 +26,7 @@ $(function(){
 function getIcone( texto, pos )
 {
 	pos = pos || 0;
-	console.log( texto, texto.charAt(pos) )
+	
 	var icone = "";
 	switch(texto.charAt(pos) )
 	{
@@ -30,13 +34,42 @@ function getIcone( texto, pos )
 			icone = "glyphicon-pencil";
 			break;
 		case '?':
-			icone = "glyphicon-pencil";
+			icone = "glyphicon-eye-close";
 			break;
 		case 'D':
-		case ' D':
-		case 'D ':
-			icone = "glyphicon-pencil";
+			icone = "glyphicon-trash";
+			break;
+		case 'A':
+			icone = "glyphicon glyphicon-ok";
+			break;
+		case 'R':
+			icone = "glyphicon glyphicon-erase";
+			break;
+		case 'C':
+			icone = "glyphicon-trash";
+			break;
+		case 'U':
+			icone = "glyphicon-trash";
 			break;
 	}
 	return "<i class='glyphicon " + icone + "'></i>";
 }
+
+;(function(window,$){
+	var App = function(){
+		var app = this;
+		$(function(){
+			app._init();
+		})
+	};
+
+	var app = App.prototype;
+		app._init = function(){
+
+			$(window).resize(function(){
+				$("#loadRepo").height( $(this).height() - $("#navSuperior").outerHeight() - 20 );
+			})
+			.trigger('resize');
+		}
+	window.App = new App();
+})(window, jQuery);

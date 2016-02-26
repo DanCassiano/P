@@ -4,12 +4,12 @@
 
 ?>
 
-<nav class="navbar ">
+<nav class="navbar " id="navSuperior">
 	<div class="container-fluid">
 		<a class="navbar-brand" href="#"><?= $nome ?></a>
 
 	<!-- Collect the nav links, forms, and other content for toggling -->
-		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+		<div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
 		<?php 
 		if( !empty($repo))
 		{
@@ -28,7 +28,9 @@
 		}
 		?>
 		</div><!-- /.navbar-collapse -->	
-		<?php if( $nome != "Gip")?>
-			<button class="btn btn-success navbar-btn btn-small navbar-right">Status</button>
+		<div class="nav navbar-nav navbar-right">
+			<?php if( $nome != "Gip")?>
+			<button class="btn btn-success navbar-btn btn-xs navbar-right">Status</button>
+		</div>
 	</div>
 </nav>
