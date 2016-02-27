@@ -6,7 +6,7 @@
 </style>
 <div class="container-fluid">
 	<div class="row">
-		<input type="hidden" id="hiddenNome" value="<?=$nome?>">
+		<input type="hidden" id="hiddenNome" value="<?=$nome ?>">
 		<div class="col-md-5">
 			<?php 
 				if( !empty( $path ))
@@ -46,8 +46,17 @@
 				}
 			?>
 		</div>
-		<div class="col-md-7" >
-			<div id="loadRepo">
+		<div class="col-md-7"  ng-controller="loadRepoControll" >
+			<div id="loadRepo" >
+				<p class="list-group-item">
+					<input type="checkbox" ng-model="all" > Marcar todos
+					<span class="pull-right">
+						<input type="checkbox" ng-click="changeFiltro" value="" checked="checked" > Todos
+						<input type="checkbox" ng-click="changeFiltro" value="N" > N
+						<input type="checkbox" ng-click="changeFiltro" value="D"> D
+					</span>
+				</p>
+				<p ng-repeat="st in status | filter:tipo" class="list-group-item"><input type="checkbox" value="{{st.arq}}" ng-checked="all" > {{st.arq}}</p>
 				
 			</div>
 		</div>
