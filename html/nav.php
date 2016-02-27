@@ -1,12 +1,15 @@
 <?php 
 	if(empty($nome))
-		$nome = "Gip";
-
+		$nome = "";
 ?>
-
 <nav class="navbar " id="navSuperior">
 	<div class="container-fluid">
-		<a class="navbar-brand" href="#"><?= $nome ?></a>
+		<?php if( !empty($nome)) { ?>
+			<a class="navbar-brand" href="">Home</a>
+			<span class="navbar-brand" ><?= $nome ?></span>
+		<?php }else{  ?>
+		<a class="navbar-brand" href="/">Pit</a>
+		<?php } ?>
 
 	<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
@@ -29,8 +32,9 @@
 		?>
 		</div><!-- /.navbar-collapse -->	
 		<div class="nav navbar-nav navbar-right">
-			<?php if( $nome != "Gip")?>
-			<button class="btn btn-success navbar-btn btn-xs navbar-right">Status</button>
+			<?php if( !empty($nome)) {?>
+				<button class="btn btn-success navbar-btn btn-xs navbar-right" id="btnStatus" ng-click="atualizarStatus($scope,$http)">Status</button>
+			<?php } ?>
 		</div>
 	</div>
 </nav>
