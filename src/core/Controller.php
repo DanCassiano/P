@@ -29,7 +29,10 @@ class Controller implements ControllerProviderInterface {
 	public function repositorio( Application $app, $nome ) {
 
 		$repo = \Git\Git::open( $app['dir_repo'] . $nome );
-		\Git\Git::windows_mode();
+
+		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') 
+			\Git\Git::windows_mode();
+		
 
 		$dados = array("titulo"=> "AppGit", 
 						"action" => "repositorio", 
@@ -43,7 +46,8 @@ class Controller implements ControllerProviderInterface {
 
 	public function ajax( Application $app,$funcao, $repositorio )
 	{
-		\Git\Git::windows_mode();
+		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') 
+			\Git\Git::windows_mode();
 		$repo = \Git\Git::open( $app['dir_repo']  . $repositorio );
 		$status = $repo->status(false, "-s", true);
 		
