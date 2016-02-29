@@ -52,11 +52,11 @@
 					<input type="checkbox" ng-model="all" > Marcar todos
 					<span class="pull-right">
 						<input type="checkbox" ng-model="todos" value="" checked="checked" > Todos
-						<input type="checkbox" ng-model="f.novos" value="N" > N
-						<input type="checkbox" ng-model="f.deletados" value="D"> D
+						<input type="checkbox" ng-model="novos" value="N" > N
+						<input type="checkbox" ng-model="deletados" value="D"> D
 					</span>
 				</p>
-				<p ng-repeat="st in status | tipoViewGit:f" class="list-group-item" data-status="{{st.status}}"><input type="checkbox" value="{{st.arq}}" ng-checked="all" >  <i class='{{icone(st.status)}}'></i>  {{st.arq}}</p>
+				<p ng-repeat="st in status | filter:tipoViewGit" class="list-group-item" data-status="{{st.status}}"><input type="checkbox" value="{{st.arq}}" ng-checked="all" >  <i class='{{icone(st.status)}}'></i>  {{st.arq}}</p>
 				
 			</div>
 		</div>

@@ -81,18 +81,23 @@ var dadosHTML = "";
 					return "glyphicon " + icone ;
 				}
 
+				$scope.todos = true;
+				$scope.tipoViewGit = function(input ){
+					var result =[];
+					angular.forEach( input,function(valor,key){
+						
+						if( $scope.todos == true )
+							return input;
+						else
+							if( valor == 'M')
+								this.push(input);
+					}, result);
 
-				$scope.atualizarStatus($scope,$http);
+					console.log( $scope.todos )
+					return result;
+				}
 
-		});
-
-		app.ang.filter('tipoViewGit', function() {
-			return function(input ) {
-				console.log( input)
-				var str = input;
-					
-				return str;
-			};
+			$scope.atualizarStatus($scope,$http);
 		});
 
 		app._init = function(){
