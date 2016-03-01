@@ -62,4 +62,24 @@
 		</div>
 	</div>
 </div>
+
+<div class="off-canvas off right">
+	<div class="titulo">
+		Comitando
+	</div>
+	<div class="body">
+		<div class="form-group">
+			<label for="inputCommit">Titulo</label>
+			<input type="text" class="form-control" id="inputCommit">
+		</div>
+		<div class="form-group">
+			<label for="txtDescricao">Descrição</label>
+			<textarea class="form-control" rols="10" cols="10" id="txtDescricao"></textarea>
+		</div>
+		<div class="form-group text-right">
+			<button class="btn btn-success">Comitar</button>
+		</div>
+
+	</div>
+</div>
 <script type="text/javascript" src="<?= $baseURL?>/assets/app.js" ></script>

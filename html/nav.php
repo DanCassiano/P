@@ -33,7 +33,13 @@
 		</div><!-- /.navbar-collapse -->	
 		<div class="nav navbar-nav navbar-right">
 			<?php if( !empty($nome)) {?>
-				<button class="btn btn-success navbar-btn btn-xs navbar-right" id="btnStatus" ng-click="atualizarStatus()">Status</button>
+				<div class="col-xs-5">
+					{{all}}
+					<button class="btn btn-danger navbar-btn btn-xs navbar-right" id="btnCommit" ng-hide="!all" >Commitar</button>
+				</div>
+				<div class="col-xs-5">
+					<button class="btn btn-success navbar-btn btn-xs navbar-right" id="btnStatus" ng-click="atualizarStatus()">Status</button>
+				</div>
 			<?php } ?>
 		</div>
 	</div>
