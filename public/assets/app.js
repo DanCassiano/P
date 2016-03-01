@@ -82,6 +82,8 @@ var dadosHTML = "";
 				}
 
 				$scope.todos = true;
+				$scope.novos = false;
+				$scope.deletados = false;
 				$scope.tipoViewGit = function(input ){
 					var result =[];
 					angular.forEach( input,function(valor,key){
@@ -89,8 +91,13 @@ var dadosHTML = "";
 						if( $scope.todos == true )
 							return input;
 						else
-							if( valor == 'M')
-								this.push(input);
+							if( $scope.novos == true && $scope.deletados == true )
+							{
+								return null;
+							}
+							else
+								if( valor == 'M')
+									this.push(input);
 					}, result);
 
 					console.log( $scope.todos )
