@@ -74,17 +74,17 @@
 	<div class="body">
 		<div class="form-group">
 			<label for="inputCommit">Titulo</label>
-			<input type="text" class="form-control" id="inputCommit">
+			<input type="text" class="form-control" id="inputCommit" ng-model="commit.titulo" >
 		</div>
 		<div class="form-group">
 			<label for="txtDescricao">Descrição</label>
-			<textarea class="form-control" rols="10" cols="10" id="txtDescricao"></textarea>
+			<textarea class="form-control" rows="15" cols="10" id="txtDescricao"  ng-model="commit.descicao"></textarea>
 		</div>
 		<div class="form-group text-right">
 			<button class="btn btn-link" ng-click="showCanvas()">Cancelar</button>
-			<button class="btn btn-success">Comitar</button>
+			<button class="btn btn-success" ng-click="registrarCommit()" ng-disabled="!commit">Comitar</button>
 		</div>
-
+	{{commit}}
 	</div>
 </div>
 <script type="text/javascript" src="<?= $baseURL?>/assets/app.js" ></script>

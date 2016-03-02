@@ -141,6 +141,26 @@ var dadosHTML = "";
 					$scope.canvasShow = !$scope.canvasShow;
 				}
 
+				$scope.registrarCommit = function(){
+					console.log( $scope.commit)
+
+					app.preloader.on();
+					 $http({
+						method : "POST",
+						url : "ajax/commit/"+$("#hiddenNome").val(),
+						data: $scope.commit
+					})
+					.then(function mySucces(response) {
+						// console.log(response.data );
+						app.preloader.off();
+
+					},
+					function myError(response) {
+						// $scope.status = response.statusText;
+						app.preloader.off();
+					});
+				}
+
 			$scope.atualizarStatus($scope,$http);
 		});
 
