@@ -46,24 +46,28 @@
 				}
 			?>
 		</div>
-		<div class="col-md-7"  ng-controller="loadRepoControll" >
+		<div class="col-md-7"   >
 			<div id="loadRepo" >
+
 				<p class="list-group-item">
-					<input type="checkbox" ng-model="all" > Marcar todos
+					<input type="checkbox" ng-click="checkedTodos()" ng-model="todos" > Marcar todos
 					<span class="pull-right">
 						<input type="checkbox" ng-model="todos" value="" checked="checked" > Todos
 						<input type="checkbox" ng-model="novos" value="N" > N
 						<input type="checkbox" ng-model="deletados" value="D"> D
 					</span>
 				</p>
-				<p ng-repeat="st in status | filter:tipoViewGit" class="list-group-item" data-status="{{st.status}}"><input type="checkbox" value="{{st.arq}}" ng-checked="all" >  <i class='{{icone(st.status)}}'></i>  {{st.arq}}</p>
-				
+				<p ng-repeat="st in status | filter:tipoViewGit" class="list-group-item" data-status="{{st.status}}">
+					<input type="checkbox" value="{{st.arq}}" ng-model="st.checked" ng-click="habilitaCommit()" >
+					<i class='{{icone(st.status)}}'></i>
+					{{st.arq}}
+				</p>
 			</div>
 		</div>
 	</div>
 </div>
 
-<div class="off-canvas off right">
+<div class="off-canvas right" ng-class="canvasShow == false ? 'off' : 'on' ">
 	<div class="titulo">
 		Comitando
 	</div>
@@ -77,9 +81,11 @@
 			<textarea class="form-control" rols="10" cols="10" id="txtDescricao"></textarea>
 		</div>
 		<div class="form-group text-right">
+			<button class="btn btn-link" ng-click="showCanvas()">Cancelar</button>
 			<button class="btn btn-success">Comitar</button>
 		</div>
 
 	</div>
 </div>
 <script type="text/javascript" src="<?= $baseURL?>/assets/app.js" ></script>
+</div>

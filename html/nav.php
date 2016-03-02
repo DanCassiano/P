@@ -2,6 +2,7 @@
 	if(empty($nome))
 		$nome = "";
 ?>
+<div ng-controller="loadRepoControll">
 <nav class="navbar " id="navSuperior">
 	<div class="container-fluid">
 		<?php if( !empty($nome)) { ?>
@@ -34,8 +35,7 @@
 		<div class="nav navbar-nav navbar-right">
 			<?php if( !empty($nome)) {?>
 				<div class="col-xs-5">
-					{{all}}
-					<button class="btn btn-danger navbar-btn btn-xs navbar-right" id="btnCommit" ng-hide="!all" >Commitar</button>
+					<button class="btn btn-danger navbar-btn btn-xs navbar-right" ng-show="showButton"  ng-click="showCanvas()">Commitar</button>
 				</div>
 				<div class="col-xs-5">
 					<button class="btn btn-success navbar-btn btn-xs navbar-right" id="btnStatus" ng-click="atualizarStatus()">Status</button>
@@ -43,4 +43,5 @@
 			<?php } ?>
 		</div>
 	</div>
+
 </nav>

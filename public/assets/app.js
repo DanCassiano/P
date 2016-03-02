@@ -9,7 +9,10 @@ var dadosHTML = "";
 
 	var app = App.prototype;
 		app.ang = angular.module('App', []);
-		app.ang.controller('loadRepoControll', function($scope, $http) {
+		app.ang.controller('loadRepoControll', function($scope, $http, $filter) {
+
+				$scope.status = [];
+				$scope.showButton = true;
 
 				$scope.atualizarStatus = function( )
 				{
@@ -81,7 +84,7 @@ var dadosHTML = "";
 					return "glyphicon " + icone ;
 				}
 
-				$scope.todos = true;
+				$scope.todos = false;
 				$scope.novos = false;
 				$scope.deletados = false;
 				$scope.tipoViewGit = function(input ){
@@ -100,8 +103,42 @@ var dadosHTML = "";
 									this.push(input);
 					}, result);
 
-					console.log( $scope.todos )
+					
 					return result;
+				}
+
+				$scope.checkedTodos = function(){
+					angular.forEach( $scope.status,function(v,i){
+						
+							v.checked = $scope.todos;
+						return v;
+					}, $scope.status);
+				}
+
+				$scope.habilitaCommit = function(){
+
+					var r = $filter("filter")( $scope.status , {checked:true} );
+						
+						if(r.length > 0)
+							$scope.showButton = true;
+						else
+							$scope.showButton = false;
+
+					return r;
+				}
+
+				$scope.$watch( "status" , function(n,o){
+				var r = $filter("filter")( $scope.status , {checked:true} );
+				if(r.length > 0)
+					$scope.showButton = true;
+				else
+				$scope.showButton = false;
+
+				}, true );
+
+				$scope.canvasShow = false;
+				$scope.showCanvas = function(){
+					$scope.canvasShow = !$scope.canvasShow;
 				}
 
 			$scope.atualizarStatus($scope,$http);
