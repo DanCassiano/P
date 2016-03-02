@@ -2,6 +2,7 @@
 namespace Core;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Silex\Application;
 use Silex\ControllerProviderInterface;
 
@@ -13,6 +14,7 @@ class Controller implements ControllerProviderInterface {
 		$factory->get('/','Core\Controller::home');
 		$factory->get('repositorio/{nome}','Core\Controller::repositorio');
 		$factory->get('ajax/{funcao}/{repositorio}','Core\Controller::ajax');
+		$factory->post('ajax/{funcao}/{repositorio}','Core\Controller::action');
 
 	return $factory;
 	}
@@ -44,23 +46,40 @@ class Controller implements ControllerProviderInterface {
 		return $this->getPager( $app['dir'], $dados );
 	}
 
-	public function ajax( Application $app,$funcao, $repositorio )
+	public function action(Application $app, Request $request, $funcao, $repositorio ){
+		if( $funcao == 'commit' ) {
+			
+			$data = json_decode($request->getContent(), true);
+			$request->request->replace(is_array($data) ? $data : array());
+			
+			$message = $request->request->get('descicao');
+			
+		}
+		return new Response('Thank you for your feedback! ' .$message, 201);
+	}
+
+	public function ajax( Application $app, Request $req, $funcao, $repositorio )
 	{
 		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') 
 			\Git\Git::windows_mode();
 		$repo = \Git\Git::open( $app['dir_repo']  . $repositorio );
-		$status = $repo->status(false, "-s", true);
-		
-		// • ' ' = unmodified
-		// • M = modified
-		// • A = added
-		// • D = deleted
-		// • R = renamed
-		// • C = copied
-		// • U = updated but unmerged
-		
-		return $app->json($status);
+
+		if( $funcao == 'status') {
+			$status = $repo->status(false, "-s", true);
+			
+			// • ' ' = unmodified
+			// • M = modified
+			// • A = added
+			// • D = deleted
+			// • R = renamed
+			// • C = copied
+			// • U = updated but unmerged
+			
+			return $app->json($status);
+		}
 	}
+
+
 
 	private function getPager( $dir, $dados ) {
 		ob_start();
