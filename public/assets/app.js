@@ -157,11 +157,16 @@ var dadosHTML = "";
 					})
 					.then(function mySucces(response) {
 						// console.log(response.data );
+						delete $scope.commit;
+						$scope.canvasShow = false;
 						app.preloader.off();
+						$scope.atualizarStatus();
 
 					},
 					function myError(response) {
 						// $scope.status = response.statusText;
+						delete $scope.commit;
+						$scope.canvasShow = false;
 						app.preloader.off();
 					});
 				}
@@ -176,6 +181,21 @@ var dadosHTML = "";
 					$("#loadRepo").height( $(this).height() - $("#navSuperior").outerHeight() - 20 );
 				})
 				.trigger('resize');
+
+			if( $("#commiter")[0] != undefined)
+			{
+				var differ = new AceDiff({
+								mode: "ace/mode/javascript",
+								left: {
+									id: "left-editor",
+									content: "your first file content here"
+								},
+								right: {
+									id: "right-editor",
+									content: "your second file content here"
+								}
+				})
+			}
 		}
 
 		app.preloader = new $.materialPreloader({

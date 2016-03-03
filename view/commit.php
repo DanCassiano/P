@@ -1,2 +1,6 @@
-asdasdas
-<?php echo $repo->run('show '.$hash) ?>
+<div id="commiter">
+    <div id="left-editor"></div>
+    <div id="gutter"></div>
+    <div id="right-editor"></div>
+</div>
+
