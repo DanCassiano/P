@@ -13,6 +13,7 @@ class Controller implements ControllerProviderInterface {
 		$factory=$app['controllers_factory'];
 		$factory->get('/','Core\Controller::home');
 		$factory->get('repositorio/{nome}','Core\Controller::repositorio');
+		$factory->get('repositorio/{nome}/hash/{hash}','Core\Controller::commitHash');
 		$factory->get('ajax/{funcao}/{repositorio}','Core\Controller::ajax');
 		$factory->post('ajax/{funcao}/{repositorio}','Core\Controller::action');
 
@@ -43,6 +44,24 @@ class Controller implements ControllerProviderInterface {
 						'nome' => $nome,
 						'path'=> $app['request']->get('path'),
 						'repo'=> $repo );
+		return $this->getPager( $app['dir'], $dados );
+	}
+
+	public function commitHash( Application $app, $nome, $hash){
+		$repo = \Git\Git::open( $app['dir_repo'] . $nome );
+
+		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') 
+			\Git\Git::windows_mode();
+		
+
+		$dados = array("titulo"=> "AppGit", 
+						"action" => "commit", 
+						'dir_repo'=> $app['dir_repo'] . $nome , 
+						"baseURL"=> $app['request']->getSchemeAndHttpHost(), 
+						'nome' => $nome,
+						'path'=> $app['request']->get('path'),
+						'repo'=> $repo,
+						'hash'=> $hash );
 		return $this->getPager( $app['dir'], $dados );
 	}
 
