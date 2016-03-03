@@ -6,8 +6,15 @@
 </style>
 <div class="container-fluid">
 	<div class="row">
+		<div class="col-xs-12">
+			<div class="alert alert-info" role="alert">
+				<?php echo $repo->run('log --pretty=tformat:"%s  %cr" -n1'); ?>
+			</div>
+		</div>
+	</div>
+	<div class="row">
 		<input type="hidden" id="hiddenNome" value="<?=$nome ?>">
-		<div class="col-md-5">
+		<div class="col-md-8">
 			<?php 
 				if( !empty( $path ))
 					if( is_dir( $dir_repo . "/". $path ))
@@ -40,14 +47,15 @@
 						if (file_exists($file)) {
 							echo '<span class="badge">'. date ("d/m/Y", filemtime($file)) .'</span>';
 						}
+						echo '<span class="text-muted pull-right">' .$repo->run("log --pretty=tformat:%s  -n1 {$file}") . "&nbsp;&nbsp;&nbsp;</span>";
 						echo '</a>';
 					}
 				$i++;
 				}
 			?>
 		</div>
-		<div class="col-md-7"   >
-			<div id="loadRepo" >
+		<div class="col-md-4"   >
+			<div id="loadRepo" ng-show="status.length" >
 
 				<p class="list-group-item">
 					<input type="checkbox" ng-click="checkedTodos()" ng-model="todos" > Marcar todos

@@ -142,13 +142,18 @@ var dadosHTML = "";
 				}
 
 				$scope.registrarCommit = function(){
-					console.log( $scope.commit)
+					
+					var arquivos = $filter("filter")( $scope.status , {checked:true} );
 
 					app.preloader.on();
 					 $http({
 						method : "POST",
 						url : "ajax/commit/"+$("#hiddenNome").val(),
-						data: $scope.commit
+						data: {
+							titulo:$scope.commit.titulo ,
+							descricao:$scope.commit.descricao,
+							arq: arquivos
+						}
 					})
 					.then(function mySucces(response) {
 						// console.log(response.data );

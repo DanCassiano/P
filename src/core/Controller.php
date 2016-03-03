@@ -49,13 +49,28 @@ class Controller implements ControllerProviderInterface {
 	public function action(Application $app, Request $request, $funcao, $repositorio ){
 		if( $funcao == 'commit' ) {
 			
+			$repo = \Git\Git::open( $app['dir_repo'] . $repositorio );
+
+			if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') 
+				\Git\Git::windows_mode();
+
 			$data = json_decode($request->getContent(), true);
-			$request->request->replace(is_array($data) ? $data : array());
 			
+			$request->request->replace(is_array($data) ? $data : array());
+			$titulo = $request->request->get('titulo');
 			$message = $request->request->get('descicao');
+			$arq =$request->request->get('arq');
+
+			$arqAdd = array();
+			foreach ($arq as $in => $item) {
+				$arqAdd[] = $app['dir_repo'] . $repositorio . "/" . trim($item['arq']);
+			}
+			$repo->add( $arqAdd );
+			$d = $repo->commit( trim($titulo). " \n " . trim($message), false );
+			
 			
 		}
-		return new Response('Thank you for your feedback! ' .$message, 201);
+		return new Response( $d, 201);
 	}
 
 	public function ajax( Application $app, Request $req, $funcao, $repositorio )
