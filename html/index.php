@@ -12,6 +12,8 @@
 	<script type="text/javascript" src="<?= $baseURL?>/assets/bootstrap/dist/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="<?= $baseURL?>/assets/materialPreloader.js"></script>
 	<script type="text/javascript" src="<?= $baseURL?>/assets/angular/angular.min.js"></script>
+	<script type="text/javascript" src="<?= $baseURL?>/assets/ace/build/src/ace.js"></script>
+	<script type="text/javascript" src="<?= $baseURL?>/assets/ace-diff/dist/ace-diff.min.js"></script>
 	<base href="<?= $baseURL?>"></base>
 </head>
 <body>
