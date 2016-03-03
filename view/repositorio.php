@@ -7,9 +7,7 @@
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-xs-12">
-			<div class="alert alert-info text-right" role="alert">
-				Último commit <?php echo $repo->run('log --pretty=tformat:"%s  <a href=\"repositorio/'.$nome .'/hash/%h\"> %h</a> %cr " -n1'); ?>
-			</div>
+			
 		</div>
 	</div>
 	<div class="row">

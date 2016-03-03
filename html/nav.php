@@ -11,6 +11,8 @@
 		<?php }else{  ?>
 		<a class="navbar-brand" href="index.php">Pit</a>
 		<?php } ?>
+		
+		
 
 	<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
@@ -32,7 +34,7 @@
 		}
 		?>
 		</div><!-- /.navbar-collapse -->	
-		<div class="nav navbar-nav navbar-right">
+		<div class="nav navbar-nav navbar-right" style="min-width:170px;">
 			<?php if( !empty($nome)) {?>
 				<div class="col-xs-5">
 					<button class="btn btn-danger navbar-btn btn-xs navbar-right" ng-show="showButton"  ng-click="showCanvas()">Commitar</button>
@@ -42,6 +44,10 @@
 				</div>
 			<?php } ?>
 		</div>
+		<p class="navbar-text navbar-right text-right text-muted">
+			Último commit 
+			<?php echo $repo->run('log --pretty=tformat:"%s  <a href=\"repositorio/'.$nome .'/hash/%h\"> %h</a> %cr " -n1'); ?>
+		</p>
 	</div>
 
 </nav>
