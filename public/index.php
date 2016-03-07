@@ -4,10 +4,13 @@
 	require_once '../vendor/autoload.php';  
 	
 	$app = new Silex\Application(); 
+	$app->register(new Silex\Provider\SessionServiceProvider());
+
 	$app['debug'] = true;
 	$app['dir'] = dirname(__DIR__);
 	$app['basePath'] = dirname(__DIR__);
 	$app['dir_repo'] = "C:/wamp/www/";
+	
 	Request::enableHttpMethodParameterOverride();
 	$app->mount('/', new Core\Controller());
 

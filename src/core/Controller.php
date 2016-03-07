@@ -16,12 +16,19 @@ class Controller implements ControllerProviderInterface {
 		$factory->get('ajax/{funcao}/{repositorio}','Core\Controller::ajax');
 		$factory->post('ajax/{funcao}/{repositorio}','Core\Controller::action');
 
+		$factory->post('login','Core\Controller::login');
+
 	return $factory;
 	}
 	public function home( Application $app ) {
 
+		$action = "index";
+		$user = $app['session']->get('usuario');
+		if( empty($user))
+			$action = "login";
+
 		$dados = array("titulo"=> "Gumball", 
-						"action" => "index", 
+						"action" => $action, 
 						'dir_repo'=> $app['dir_repo'], 
 						"baseURL"=> $app['request']->getSchemeAndHttpHost(),
 						'repo'=>"" );
@@ -54,8 +61,6 @@ class Controller implements ControllerProviderInterface {
 			if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') 
 				\Git\Git::windows_mode();
 
-			
-
 			$data = json_decode($request->getContent(), true);
 			
 			$request->request->replace(is_array($data) ? $data : array());
@@ -67,11 +72,14 @@ class Controller implements ControllerProviderInterface {
 			foreach ($arq as $in => $item) {
 				$arqAdd[] = $app['dir_repo'] . $repositorio . "/" . trim($item['arq']);
 			}
-			$repo->setenv('GIT_COMMITTER_NAME', "DanCassiano");
-			$repo->setenv('GIT_AUTHOR_NAME', "DanCassiano");
 
-			$repo->setenv('GIT_COMMITTER_EMAIL', "jordan_gnr@hotmail.com");
-			$repo->setenv('GIT_AUTHOR_EMAIL', "jordan_gnr@hotmail.com");
+			$user = $app['session']->get('usuario');
+			// $app['session']->set('senha', $senha  );
+			$repo->setenv('GIT_COMMITTER_NAME', $user);
+			$repo->setenv('GIT_AUTHOR_NAME', $user);
+
+			$repo->setenv('GIT_COMMITTER_EMAIL', "dan.silvestre.cassino@gmail.com");
+			$repo->setenv('GIT_AUTHOR_EMAIL', "dan.silvestre.cassino@gmail.com");
 		
 			$repo->add( $arqAdd );
 			$d = $repo->commit( trim($titulo). " \n " . trim($message), false );
@@ -101,6 +109,17 @@ class Controller implements ControllerProviderInterface {
 			
 			return $app->json($status);
 		}
+	}
+
+	public function login( Application $app, Request $request) {
+
+		parse_str($request->getContent(), $data);
+		$request->request->replace(is_array($data) ? $data : array());
+		$usuario = $request->request->get('usuario');
+		$senha = $request->request->get('senha');
+		$app['session']->set('usuario', $usuario  );
+		$app['session']->set('senha', $senha  );
+		return $app->redirect('/');
 	}
 
 
