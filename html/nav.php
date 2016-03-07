@@ -2,14 +2,17 @@
 	if(empty($nome))
 		$nome = "";
 ?>
+<div ng-controller="loadRepoControll">
 <nav class="navbar " id="navSuperior">
 	<div class="container-fluid">
 		<?php if( !empty($nome)) { ?>
 			<a class="navbar-brand" href="">Home</a>
 			<span class="navbar-brand" ><?= $nome ?></span>
 		<?php }else{  ?>
-		<a class="navbar-brand" href="/">Pit</a>
+		<a class="navbar-brand" href="index.php">Pit</a>
 		<?php } ?>
+		
+		
 
 	<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
@@ -31,10 +34,22 @@
 		}
 		?>
 		</div><!-- /.navbar-collapse -->	
-		<div class="nav navbar-nav navbar-right">
-			<?php if( !empty($nome)) {?>
-				<button class="btn btn-success navbar-btn btn-xs navbar-right" id="btnStatus" ng-click="atualizarStatus($scope,$http)">Status</button>
+		<div class="nav navbar-nav navbar-right" style="min-width:170px;">
+			<?php if( !empty($nome) && empty($hash)) {?>
+				<div class="col-xs-5">
+					<button class="btn btn-danger navbar-btn btn-xs navbar-right" ng-show="showButton"  ng-click="showCanvas()">Commitar</button>
+				</div>
+				<div class="col-xs-5">
+					<button class="btn btn-success navbar-btn btn-xs navbar-right" id="btnStatus" ng-click="atualizarStatus()">Status</button>
+				</div>
 			<?php } ?>
 		</div>
+		<?php if( !empty($nome) && empty($hash)) {?>
+			<p class="navbar-text navbar-right text-right text-muted">
+				Último commit 
+				<?php echo $repo->run('log --pretty=tformat:"%s  <a href=\"repositorio/'.$nome .'/hash/%h\"> %h</a> %cr " -n1'); ?>
+			</p>
+		<?php } ?>
 	</div>
+
 </nav>

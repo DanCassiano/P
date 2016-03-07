@@ -22,6 +22,8 @@
   "dependencies": {
     "jquery": "~2.0.3",
     "bootstrap": "^3.3.6",
-    "angular": "^1.5.0"
+    "angular": "^1.5.0",
+    "ace": "^1.2.3",
+    "ace-diff": "*"
   }
 }

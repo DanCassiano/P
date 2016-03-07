@@ -1,72 +1,38 @@
 var dadosHTML = "";
-function getIcone( texto, pos )
-{
-	pos = pos || 0;
-	
-	var icone = "";
-	switch(texto.charAt(pos) )
-	{
-		case 'M':
-			icone = "glyphicon-pencil";
-			break;
-		case '?':
-			icone = "glyphicon-eye-close";
-			break;
-		case 'D':
-			icone = "glyphicon-trash";
-			break;
-		case 'A':
-			icone = "glyphicon glyphicon-ok";
-			break;
-		case 'R':
-			icone = "glyphicon glyphicon-erase";
-			break;
-		case 'C':
-			icone = "glyphicon-trash";
-			break;
-		case 'U':
-			icone = "glyphicon-trash";
-			break;
-	}
-	return "<i class='glyphicon " + icone + "'></i>";
-}
-
 ;(function(window,$){
 	var App = function(){
 		var app = this;
 		$(function(){
 			app._init();
-
-
-	
 		})
 	};
 
 	var app = App.prototype;
 		app.ang = angular.module('App', []);
-		app.ang.controller('loadRepoControll', function($scope, $http) {
-				
+		app.ang.controller('loadRepoControll', function($scope, $http, $filter) {
 
-				$scope.atualizarStatus = function( $scope )
+				$scope.status = [];
+				$scope.showButton = true;
+
+				$scope.atualizarStatus = function( )
 				{
+					app.preloader.on();
 					 $http({
 						method : "GET",
 						url : "ajax/status/"+$("#hiddenNome").val()
 					})
 					.then(function mySucces(response) {
-					
 						$scope.status = response.data;
-					}, 
-					
+						app.preloader.off();
+					},
 					function myError(response) {
-					    $scope.status = response.statusText;
+						$scope.status = response.statusText;
+						app.preloader.off();
 					});
 				}
-
 				$scope.tipoFiltro = '';
-
 				$scope.tipo = function( item ){
-					console.log( item.status )
+					
 					if( $scope.tipoFiltro != "" )
 					{
 						if( item.status.charAt(0) == $scope.tipoFiltro )
@@ -81,24 +47,155 @@ function getIcone( texto, pos )
 					$scope.tipoFiltro= this;
 				}
 
+				$scope.icone = function( texto ){
+					if( texto.charAt(0) == "" )
+						texto = texto.charAt(1);
 
-				$scope.atualizarStatus($scope,$http);
+					if( texto.match(/\?/g) )
+						if( texto.match(/\?/g).length > 1)
+							texto = texto.charAt(0);
+
+					
+					var icone = "M";
+					switch( texto.trim() )
+					{
+						case 'M':
+							icone = "glyphicon-pencil";
+							break;
+						case '?':
+							icone = "glyphicon-eye-close";
+							break;
+						case 'D':
+							icone = "glyphicon-trash";
+							break;
+						case 'A':
+							icone = "glyphicon glyphicon-ok";
+							break;
+						case 'R':
+							icone = "glyphicon glyphicon-erase";
+							break;
+						case 'C':
+							icone = "glyphicon-trash";
+							break;
+						case 'U':
+							icone = "glyphicon-trash";
+							break;
+					}
+					return "glyphicon " + icone ;
+				}
+
+				$scope.todos = false;
+				$scope.novos = false;
+				$scope.deletados = false;
+				$scope.tipoViewGit = function(input ){
+					var result =[];
+					angular.forEach( input,function(valor,key){
+						
+						if( $scope.todos == true )
+							return input;
+						else
+							if( $scope.novos == true && $scope.deletados == true )
+							{
+								return null;
+							}
+							else
+								if( valor == 'M')
+									this.push(input);
+					}, result);
+
+					
+					return result;
+				}
+
+				$scope.checkedTodos = function(){
+					angular.forEach( $scope.status,function(v,i){
+						
+							v.checked = $scope.todos;
+						return v;
+					}, $scope.status);
+				}
+
+				$scope.habilitaCommit = function(){
+
+					var r = $filter("filter")( $scope.status , {checked:true} );
+						
+						if(r.length > 0)
+							$scope.showButton = true;
+						else
+							$scope.showButton = false;
+
+					return r;
+				}
+
+				$scope.$watch( "status" , function(n,o){
+				var r = $filter("filter")( $scope.status , {checked:true} );
+				if(r.length > 0)
+					$scope.showButton = true;
+				else
+				$scope.showButton = false;
+
+				}, true );
+
+				$scope.canvasShow = false;
+				$scope.showCanvas = function(){
+					$scope.canvasShow = !$scope.canvasShow;
+				}
+
+				$scope.registrarCommit = function(){
+					
+					var arquivos = $filter("filter")( $scope.status , {checked:true} );
+
+					app.preloader.on();
+					 $http({
+						method : "POST",
+						url : "ajax/commit/"+$("#hiddenNome").val(),
+						data: {
+							titulo:$scope.commit.titulo ,
+							descricao:$scope.commit.descricao,
+							arq: arquivos
+						}
+					})
+					.then(function mySucces(response) {
+						// console.log(response.data );
+						delete $scope.commit;
+						$scope.canvasShow = false;
+						app.preloader.off();
+						$scope.atualizarStatus();
+
+					},
+					function myError(response) {
+						// $scope.status = response.statusText;
+						delete $scope.commit;
+						$scope.canvasShow = false;
+						app.preloader.off();
+					});
+				}
+
+			$scope.atualizarStatus($scope,$http);
 		});
 
 		app._init = function(){
 
+			$(window)
+				.resize(function(){
+					$("#loadRepo").height( $(this).height() - $("#navSuperior").outerHeight() - 20 );
+				})
+				.trigger('resize');
 
-			$(window).resize(function(){
-				$("#loadRepo").height( $(this).height() - $("#navSuperior").outerHeight() - 20 );
-			})
-			.trigger('resize');
-
-			// this.status();
-			var app = this;
-			// $("body").on('click','#btnStatus',function(){
-			// 	app.status()
-			// });
-			// app.preloader.on();
+			if( $("#commiter")[0] != undefined)
+			{
+				var differ = new AceDiff({
+								mode: "ace/mode/javascript",
+								left: {
+									id: "left-editor",
+									content: "your first file content here"
+								},
+								right: {
+									id: "right-editor",
+									content: "your second file content here"
+								}
+				})
+			}
 		}
 
 		app.preloader = new $.materialPreloader({
@@ -112,30 +209,5 @@ function getIcone( texto, pos )
 				        fadeOut: 200,
 				       
 				    });
-
-		app.status = function(){
-			// glyphicon glyphicon-minus
-			// • ' ' = unmodified
-			// • M = modified
-			// • A = added
-			// • D = deleted
-			// • R = renamed
-			// • C = copied
-			// • U = updated but unmerged
-			var app = this;
-			app.preloader.on();
-			dadosHTML = "";
-			$("#loadRepo").html( "" );
-			$.get("ajax/status/"+$("#hiddenNome").val(),function(dados){
-				$.each(dados,function(i,v){
-					var icone2 = "";
-						if( v.status.charAt(0) != v.status.charAt(1))
-							icone2 = v.status;
-					dadosHTML += "<p class=\"list-group-item\" data-statuc='" + v.status + "'>" + getIcone( v.status ) + getIcone( icone2, 1 )  + v.arq + "</p>";
-				});
-				$("#loadRepo").html( dadosHTML );
-				app.preloader.off();
-			},'json');
-		}
 	window.App = new App();
 })(window, jQuery);

@@ -2,3 +2,6 @@ vendor
 public/assets/bootstrap
 public/assets/angular
 public/assets/jquery
+public/assets/ace
+public/assets/google-diff-match-patch-js
+public/assets/ace-diff/
