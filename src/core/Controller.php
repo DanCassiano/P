@@ -13,7 +13,6 @@ class Controller implements ControllerProviderInterface {
 		$factory=$app['controllers_factory'];
 		$factory->get('/','Core\Controller::home');
 		$factory->get('repositorio/{nome}','Core\Controller::repositorio');
-		$factory->get('repositorio/{nome}/hash/{hash}','Core\Controller::commitHash');
 		$factory->get('ajax/{funcao}/{repositorio}','Core\Controller::ajax');
 		$factory->post('ajax/{funcao}/{repositorio}','Core\Controller::action');
 
@@ -21,7 +20,7 @@ class Controller implements ControllerProviderInterface {
 	}
 	public function home( Application $app ) {
 
-		$dados = array("titulo"=> "AppGit", 
+		$dados = array("titulo"=> "Gumball", 
 						"action" => "index", 
 						'dir_repo'=> $app['dir_repo'], 
 						"baseURL"=> $app['request']->getSchemeAndHttpHost(),
@@ -37,31 +36,13 @@ class Controller implements ControllerProviderInterface {
 			\Git\Git::windows_mode();
 		
 
-		$dados = array("titulo"=> "AppGit", 
+		$dados = array("titulo"=> "Gumball - " . $nome, 
 						"action" => "repositorio", 
 						'dir_repo'=> $app['dir_repo'] . $nome , 
 						"baseURL"=> $app['request']->getSchemeAndHttpHost(), 
 						'nome' => $nome,
 						'path'=> $app['request']->get('path'),
 						'repo'=> $repo );
-		return $this->getPager( $app['dir'], $dados );
-	}
-
-	public function commitHash( Application $app, $nome, $hash){
-		$repo = \Git\Git::open( $app['dir_repo'] . $nome );
-
-		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') 
-			\Git\Git::windows_mode();
-		
-
-		$dados = array("titulo"=> "AppGit", 
-						"action" => "commit", 
-						'dir_repo'=> $app['dir_repo'] . $nome , 
-						"baseURL"=> $app['request']->getSchemeAndHttpHost(), 
-						'nome' => $nome,
-						'path'=> $app['request']->get('path'),
-						'repo'=> $repo,
-						'hash'=> $hash );
 		return $this->getPager( $app['dir'], $dados );
 	}
 
@@ -72,6 +53,8 @@ class Controller implements ControllerProviderInterface {
 
 			if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') 
 				\Git\Git::windows_mode();
+
+			
 
 			$data = json_decode($request->getContent(), true);
 			
@@ -84,6 +67,12 @@ class Controller implements ControllerProviderInterface {
 			foreach ($arq as $in => $item) {
 				$arqAdd[] = $app['dir_repo'] . $repositorio . "/" . trim($item['arq']);
 			}
+			$repo->setenv('GIT_COMMITTER_NAME', "DanCassiano");
+			$repo->setenv('GIT_AUTHOR_NAME', "DanCassiano");
+
+			$repo->setenv('GIT_COMMITTER_EMAIL', "jordan_gnr@hotmail.com");
+			$repo->setenv('GIT_AUTHOR_EMAIL', "jordan_gnr@hotmail.com");
+		
 			$repo->add( $arqAdd );
 			$d = $repo->commit( trim($titulo). " \n " . trim($message), false );
 			
@@ -97,6 +86,7 @@ class Controller implements ControllerProviderInterface {
 		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') 
 			\Git\Git::windows_mode();
 		$repo = \Git\Git::open( $app['dir_repo']  . $repositorio );
+	
 
 		if( $funcao == 'status') {
 			$status = $repo->status(false, "-s", true);
