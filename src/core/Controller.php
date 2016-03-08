@@ -31,7 +31,8 @@ class Controller implements ControllerProviderInterface {
 						"action" => $action, 
 						'dir_repo'=> $app['dir_repo'], 
 						"baseURL"=> $app['request']->getSchemeAndHttpHost(),
-						'repo'=>"" );
+						'repo'=>"",
+						"db"=>$app['db'] );
 		return $this->getPager( $app['dir'], $dados );
 	}
 

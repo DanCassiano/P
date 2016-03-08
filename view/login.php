@@ -1,3 +1,7 @@
+<?php 
+	$r =$db->fetchAll('SELECT * FROM usuario');
+	var_dump( $r);
+ ?>
 <form method="POST" action="login" id="braintree-payment-form">
 	<div class="panel panel-default panel-login">
 		<div class="panel-body">
