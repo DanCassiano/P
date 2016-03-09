@@ -9,7 +9,7 @@
 			<a class="navbar-brand" href="">Home</a>
 			<span class="navbar-brand" ><?= $nome ?></span>
 		<?php }else{  ?>
-		<a class="navbar-brand" href="index.php">Pit</a>
+		<a class="navbar-brand" href="index.php">Gumball</a>
 		<?php } ?>
 		
 		
