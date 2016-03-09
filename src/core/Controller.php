@@ -12,6 +12,7 @@ class Controller implements ControllerProviderInterface {
 
 		$factory=$app['controllers_factory'];
 		$factory->get('/','Core\Controller::home');
+		$factory->get('/cadastro','Core\Controller::cadastro');
 		$factory->get('repositorio/{nome}','Core\Controller::repositorio');
 		$factory->get('ajax/{funcao}/{repositorio}','Core\Controller::ajax');
 		$factory->post('ajax/{funcao}/{repositorio}','Core\Controller::action');
@@ -33,6 +34,16 @@ class Controller implements ControllerProviderInterface {
 						"baseURL"=> $app['request']->getSchemeAndHttpHost(),
 						'repo'=>"",
 						"db"=>$app['db'] );
+		return $this->getPager( $app['dir'], $dados );
+	}
+
+	public function cadastro( Application $app ){
+
+		$dados = array("titulo"=> "Gumball - Cadastro", 
+						"action" => "cadastro", 
+						'dir_repo'=> $app['dir_repo'], 
+						"baseURL"=> $app['request']->getSchemeAndHttpHost(),
+						'repo'=>"");
 		return $this->getPager( $app['dir'], $dados );
 	}
 
@@ -118,12 +129,15 @@ class Controller implements ControllerProviderInterface {
 		$request->request->replace(is_array($data) ? $data : array());
 		$usuario = $request->request->get('usuario');
 		$senha = $request->request->get('senha');
-		$app['session']->set('usuario', $usuario  );
-		$app['session']->set('senha', $senha  );
+
+		$r =$app['db']->fetchAll("SELECT id FROM usuario WHERE login='{$usuario}' AND senha='{$senha}'");
+		if( $r ){
+			$app['session']->set('usuario', $usuario  );
+			$app['session']->set('senha', $senha  );
+		}
+	
 		return $app->redirect('/');
 	}
-
-
 
 	private function getPager( $dir, $dados ) {
 		ob_start();
