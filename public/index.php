@@ -11,14 +11,18 @@
 					'host'      => 'localhost',
 					'dbname'    => 'gumball',
 					'user'      => 'root',
-					'password'  => 'root',
+					'password'  => '',
 					'charset'   => 'utf8mb4',
 				),
 		));
 	$app['debug'] = true;
 	$app['dir'] = dirname(__DIR__);
 	$app['basePath'] = dirname(__DIR__);
-	$app['dir_repo'] = "/var/www/";
+	
+	if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') 
+		$app['dir_repo'] = "c:/wamp/www/";
+	else
+		$app['dir_repo'] = "/var/www/";
 	
 	Request::enableHttpMethodParameterOverride();
 	$app->mount('/', new Core\Controller());
