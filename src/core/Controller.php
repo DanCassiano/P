@@ -13,11 +13,13 @@ class Controller implements ControllerProviderInterface {
 		$factory=$app['controllers_factory'];
 		$factory->get('/','Core\Controller::home');
 		$factory->get('/cadastro','Core\Controller::cadastro');
+
 		$factory->get('repositorio/{nome}','Core\Controller::repositorio');
 		$factory->get('ajax/{funcao}/{repositorio}','Core\Controller::ajax');
 		$factory->post('ajax/{funcao}/{repositorio}','Core\Controller::action');
 
 		$factory->post('login','Core\Controller::login');
+		$factory->get('logout','Core\Controller::logout');
 
 	return $factory;
 	}
@@ -136,6 +138,13 @@ class Controller implements ControllerProviderInterface {
 			$app['session']->set('senha', $senha  );
 		}
 	
+		return $app->redirect('/');
+	}
+
+	public function logout(Application $app, Request $request){
+		
+		$app['session']->remove('usuario' );
+		$app['session']->remove('senha');
 		return $app->redirect('/');
 	}
 

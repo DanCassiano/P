@@ -26,7 +26,10 @@
 	$app->error(function (\Exception $e, $code) {
 		switch ($code) {
 				case 404:
-					$message = 'The requested page could not be found.';
+					$message = ' <center>
+										<h1>Ops, nada aqui!</h1>
+										<img src="assets/imagens/404.png" alt=""> 
+								</center>';
 				break;
 			default:
 				$message = $e->getMessage() . $code;
