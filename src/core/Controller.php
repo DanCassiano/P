@@ -26,16 +26,17 @@ class Controller implements ControllerProviderInterface {
 	public function home( Application $app ) {
 
 		$action = "index";
-		$user = $app['session']->get('usuario');
+		$user = $app['session']->get('user');
 		if( empty($user))
 			$action = "login";
+
 
 		$dados = array("titulo"=> "Gumball", 
 						"action" => $action, 
 						'dir_repo'=> $app['dir_repo'], 
 						"baseURL"=> $app['request']->getSchemeAndHttpHost(),
 						'repo'=>"",
-						"db"=>$app['db'] );
+						"usuario"=> $user['nome']);
 		return $this->getPager( $app['dir'], $dados );
 	}
 
@@ -132,19 +133,16 @@ class Controller implements ControllerProviderInterface {
 		$usuario = $request->request->get('usuario');
 		$senha = $request->request->get('senha');
 
-		$r =$app['db']->fetchAll("SELECT id FROM usuario WHERE login='{$usuario}' AND senha='{$senha}'");
+		$r =$app['db']->fetchAll("SELECT id, nome FROM usuario WHERE login='{$usuario}' AND senha='{$senha}'");
 		if( $r ){
-			$app['session']->set('usuario', $usuario  );
-			$app['session']->set('senha', $senha  );
+			$app['session']->set('user', $r[0] );
 		}
-	
 		return $app->redirect('/');
 	}
 
 	public function logout(Application $app, Request $request){
 		
-		$app['session']->remove('usuario' );
-		$app['session']->remove('senha');
+		$app['session']->remove('user' );
 		return $app->redirect('/');
 	}
 

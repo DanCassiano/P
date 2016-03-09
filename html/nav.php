@@ -12,13 +12,13 @@
 		<a class="navbar-brand" href="index.php">Gumball</a>
 		<?php } ?>
 		
-		
+		<?php if( !empty($usuario)){ ?>
 		<div class="collapse navbar-collapse navbar-right" id="colapseUser">
 			<ul class="nav navbar-nav navbar-right">
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
 					<img src="assets/imagens/user.png" class="img-circle" width="24" height="24"> 
-					Jordan
+					<?=$usuario ?>
 					<span class="caret"></span>
 					</a>
 					<ul class="dropdown-menu">
@@ -31,6 +31,7 @@
 				</li>
 			</ul>
 		</div>
+		<?php } ?>
 		<div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
 
 		<?php 
