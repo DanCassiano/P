@@ -1,17 +1,21 @@
 <?php
 	use Symfony\Component\HttpFoundation\Response;
 	use Symfony\Component\HttpFoundation\Request;
+	use Core\Ini;
+
 	require_once '../vendor/autoload.php';
 	
 	$app = new Silex\Application();
 	$app->register(new Silex\Provider\SessionServiceProvider());
+
+	$ini = new Ini("../app.ini");
 	$app->register(new Silex\Provider\DoctrineServiceProvider(), array(
 			'db.options' => array(
 					'driver'    => 'pdo_mysql',
-					'host'      => 'localhost',
-					'dbname'    => 'gumball',
-					'user'      => 'root',
-					'password'  => 'root',
+					'host'      => $ini->banco['host'],
+					'dbname'    => $ini->banco['bd'],
+					'user'      => $ini->banco['user'],
+					'password'  => $ini->banco['senha'],
 					'charset'   => 'utf8mb4',
 				),
 		));

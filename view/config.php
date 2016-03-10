@@ -31,8 +31,13 @@
 			</div>
 			<div class="form-group">
 				<label for="senha">Senha</label>
-				<input type="password" value="<?=$ini->banco['senha'] ?>" id="senha" name="senha" class="form-control" required>
+				<input type="password" value="<?=$ini->banco['senha'] ?>" id="senha" name="senha" class="form-control" >
 				<span id="senha" class="help-block">Senha do banco de dados.</span>
+			</div>
+			<div class="form-group">
+				<label for="bd">Banco</label>
+				<input type="text" id="bd" name="bd" value="<?=$ini->banco['bd'] ?>" placeholder="" class="form-control" required>
+				<span id="email" class="help-block"></span>
 			</div>
 			<div class="form-group text-right">
 				<button class="btn btn-success">Salvar</button>

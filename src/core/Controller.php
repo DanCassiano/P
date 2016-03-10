@@ -72,7 +72,8 @@ class Controller implements ControllerProviderInterface {
 		$arq['repodir'] = $d['repodir'];
 		$arq['banco'] = array(	'host'=> $d['host'],
 								'user'=> $d['user'],
-								'senha'=> $d['senha']);
+								'senha'=> $d['senha'],
+								"bd"=> $d['bd']);
 		$ini->edit( $arq );
 		$ini->save();
 		return  $app->redirect('/config');
