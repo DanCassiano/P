@@ -4,7 +4,7 @@
 		<div class="col-xs-4">
 			<div class="w3-card">
 				<ul class="w3-ul w3-hoverable">
-					<li>
+					<li class="w3-blue">
 						<a href="/" > <i class="glyphicon glyphicon-inbox"></i> Repositórios</a>
 					</li>
 					<li>
