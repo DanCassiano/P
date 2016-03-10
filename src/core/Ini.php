@@ -46,7 +46,7 @@
 			}
 			
 			if($file)
-				return file_put_contents($file,$str);
+				return file_put_contents($file, ";<?php \n".$str);
 			else
 				return $str;
 		}
