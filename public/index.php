@@ -11,7 +11,7 @@
 					'host'      => 'localhost',
 					'dbname'    => 'gumball',
 					'user'      => 'root',
-					'password'  => '',
+					'password'  => 'root',
 					'charset'   => 'utf8mb4',
 				),
 		));

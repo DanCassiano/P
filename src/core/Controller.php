@@ -15,6 +15,9 @@ class Controller implements ControllerProviderInterface {
 		$factory->get('/cadastro','Core\Controller::cadastro');
 
 		$factory->get('repositorio/{nome}','Core\Controller::repositorio');
+		$factory->get('config','Core\Controller::config');
+		$factory->post('config','Core\Controller::saveConfig');
+
 		$factory->get('ajax/{funcao}/{repositorio}','Core\Controller::ajax');
 		$factory->post('ajax/{funcao}/{repositorio}','Core\Controller::action');
 
@@ -50,12 +53,38 @@ class Controller implements ControllerProviderInterface {
 		return $this->getPager( $app['dir'], $dados );
 	}
 
+	public function config( Application $app ){
+		$ini = new Ini( "../app.ini");
+		$dados = array("titulo"=> "Gumball - Config", 
+						"action" => "config", 
+						'dir_repo'=> $app['dir_repo'],
+						'dir'=> $app['dir'],
+						"baseURL"=> $app['request']->getSchemeAndHttpHost(),
+						'repo'=>"",
+						"ini"=> $ini);
+		return $this->getPager( $app['dir'], $dados );
+	}
+
+	public function saveConfig( Application $app, Request $request ){
+		$ini = new Ini("../app.ini");
+		$d = array();
+		parse_str($request->getContent(), $d);
+		$arq['repodir'] = $d['repodir'];
+		$arq['banco'] = array(	'host'=> $d['host'],
+								'user'=> $d['user'],
+								'senha'=> $d['senha']);
+		$ini->edit( $arq );
+		$ini->save();
+		return  $app->redirect('/config');
+	}
+
 	public function repositorio( Application $app, $nome ) {
 
 		$repo = \Git\Git::open( $app['dir_repo'] . $nome );
 
 		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') 
 			\Git\Git::windows_mode();
+		$user = $app['session']->get('user');
 		
 
 		$dados = array("titulo"=> "Gumball - " . $nome, 
@@ -64,7 +93,8 @@ class Controller implements ControllerProviderInterface {
 						"baseURL"=> $app['request']->getSchemeAndHttpHost(), 
 						'nome' => $nome,
 						'path'=> $app['request']->get('path'),
-						'repo'=> $repo );
+						'repo'=> $repo,
+						"usuario"=> $user['nome'] );
 		return $this->getPager( $app['dir'], $dados );
 	}
 
