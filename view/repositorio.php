@@ -32,6 +32,7 @@
 				}
 				
 				$i = -1;
+				
 				foreach ($files as $file) {
 					if (!in_array($file, $exclude_files)) {
 
@@ -41,12 +42,12 @@
 							$icone = 'glyphicon-file';
 
 						$p = pathinfo( $file );
-						$nomeArquivo = $p['filename'] . ( empty($p['extension']) ? "" : $p['extension'] );
+						$nomeArquivo = $p['filename'] . ( empty($p['extension']) ? "" : "." . $p['extension'] );
 						echo '<a href="repositorio/' . $nome .'?path='. ( $path !== null ? $path ."/" : "" ). $p['filename'].'" rel='.$i.'  class="list-group-item" > <i class="glyphicon ' . $icone . '"></i> '.$nomeArquivo;
 						if (file_exists($file)) {
 							echo '<span class="badge">'. date ("d/m/Y", filemtime($file)) .'</span>';
 						}
-						echo '<span class="text-muted pull-right">' .$repo->run("log --pretty=tformat:%s  -n1 {$nomeArquivo}") . "&nbsp;&nbsp;&nbsp;</span>";
+						echo '<span class="text-muted pull-right">' .$repo->run("log --pretty=tformat:%s  -n1 -- {$nomeArquivo}") . "&nbsp;&nbsp;&nbsp;</span>";
 						echo '</a>';
 					}
 				$i++;
