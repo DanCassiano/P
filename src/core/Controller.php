@@ -73,7 +73,7 @@ class Controller implements ControllerProviderInterface {
 		$arq['banco'] = array(	'host'=> $d['host'],
 								'user'=> $d['user'],
 								'senha'=> $d['senha'],
-								"bd"=> $d['bd']);
+								'bd'=> $d['bd']);
 		$ini->edit( $arq );
 		$ini->save();
 		return  $app->redirect('/config');

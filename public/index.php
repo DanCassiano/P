@@ -23,10 +23,7 @@
 	$app['dir'] = dirname(__DIR__);
 	$app['basePath'] = dirname(__DIR__);
 	
-	if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') 
-		$app['dir_repo'] = "c:/wamp/www/";
-	else
-		$app['dir_repo'] = "/var/www/";
+	$app['dir_repo'] = $ini->repodir;
 	
 	Request::enableHttpMethodParameterOverride();
 	$app->mount('/', new Core\Controller());
