@@ -15,6 +15,8 @@ class Controller implements ControllerProviderInterface {
 		$factory->get('/cadastro','Core\Controller::cadastro');
 
 		$factory->get('repositorio/{nome}','Core\Controller::repositorio');
+		
+
 		$factory->get('config','Core\Controller::config');
 		$factory->post('config','Core\Controller::saveConfig');
 
@@ -94,6 +96,7 @@ class Controller implements ControllerProviderInterface {
 						"baseURL"=> $app['request']->getSchemeAndHttpHost(), 
 						'nome' => $nome,
 						'path'=> $app['request']->get('path'),
+						'view'=> $app['request']->get('view'),
 						'repo'=> $repo,
 						"usuario"=> $user['nome'] );
 		return $this->getPager( $app['dir'], $dados );
@@ -119,10 +122,10 @@ class Controller implements ControllerProviderInterface {
 				$arqAdd[] = $app['dir_repo'] . $repositorio . "/" . trim($item['arq']);
 			}
 
-			$user = $app['session']->get('usuario');
+			$user = $app['session']->get('user');
 			// $app['session']->set('senha', $senha  );
-			$repo->setenv('GIT_COMMITTER_NAME', $user);
-			$repo->setenv('GIT_AUTHOR_NAME', $user);
+			$repo->setenv('GIT_COMMITTER_NAME', $user['nome']);
+			$repo->setenv('GIT_AUTHOR_NAME', $user['nome']);
 
 			$repo->setenv('GIT_COMMITTER_EMAIL', "dan.silvestre.cassino@gmail.com");
 			$repo->setenv('GIT_AUTHOR_EMAIL', "dan.silvestre.cassino@gmail.com");
