@@ -12,20 +12,75 @@ class Controller implements ControllerProviderInterface {
 
 		$factory=$app['controllers_factory'];
 		$factory->get('/','Core\Controller::home');
+		$factory->get('/cadastro','Core\Controller::cadastro');
+
 		$factory->get('repositorio/{nome}','Core\Controller::repositorio');
+
+		$factory->get('config','Core\Controller::config');
+		$factory->post('config','Core\Controller::saveConfig');
+
+
 		$factory->get('ajax/{funcao}/{repositorio}','Core\Controller::ajax');
 		$factory->post('ajax/{funcao}/{repositorio}','Core\Controller::action');
 
-	return $factory;
+		$factory->post('login','Core\Controller::login');
+		$factory->get('logout','Core\Controller::logout');
+
+		return $factory;
 	}
 	public function home( Application $app ) {
 
+
+		$action = "index";
+		$user = $app['session']->get('user');
+		if( empty($user))
+			$action = "login";
+
+
 		$dados = array("titulo"=> "Gumball", 
-						"action" => "index", 
+						"action" => $action, 
 						'dir_repo'=> $app['dir_repo'], 
 						"baseURL"=> $app['request']->getSchemeAndHttpHost(),
-						'repo'=>"" );
+						'repo'=>"",
+						"usuario"=> $user['nome']);
 		return $this->getPager( $app['dir'], $dados );
+	}
+
+	public function cadastro( Application $app ){
+
+		$dados = array("titulo"=> "Gumball - Cadastro", 
+						"action" => "cadastro", 
+						'dir_repo'=> $app['dir_repo'], 
+						"baseURL"=> $app['request']->getSchemeAndHttpHost(),
+						'repo'=>"");
+		return $this->getPager( $app['dir'], $dados );
+	}
+
+
+	public function config( Application $app ){
+		$ini = new Ini( "../app.ini");
+		$dados = array("titulo"=> "Gumball - Config", 
+						"action" => "config", 
+						'dir_repo'=> $app['dir_repo'],
+						'dir'=> $app['dir'],
+						"baseURL"=> $app['request']->getSchemeAndHttpHost(),
+						'repo'=>"",
+						"ini"=> $ini);
+		return $this->getPager( $app['dir'], $dados );
+	}
+
+	public function saveConfig( Application $app, Request $request ){
+		$ini = new Ini("../app.ini");
+		$d = array();
+		parse_str($request->getContent(), $d);
+		$arq['repodir'] = $d['repodir'];
+		$arq['banco'] = array(	'host'=> $d['host'],
+								'user'=> $d['user'],
+								'senha'=> $d['senha'],
+								'bd'=> $d['bd']);
+		$ini->edit( $arq );
+		$ini->save();
+		return  $app->redirect('/config');
 	}
 
 	public function repositorio( Application $app, $nome ) {
@@ -34,6 +89,7 @@ class Controller implements ControllerProviderInterface {
 
 		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') 
 			\Git\Git::windows_mode();
+		$user = $app['session']->get('user');
 		
 
 		$dados = array("titulo"=> "Gumball - " . $nome, 
@@ -42,9 +98,11 @@ class Controller implements ControllerProviderInterface {
 						"baseURL"=> $app['request']->getSchemeAndHttpHost(), 
 						'nome' => $nome,
 						'path'=> $app['request']->get('path'),
-						'repo'=> $repo );
+						'repo'=> $repo,
+						"usuario"=> $user['nome'] );
 		return $this->getPager( $app['dir'], $dados );
 	}
+
 
 	public function action(Application $app, Request $request, $funcao, $repositorio ){
 		if( $funcao == 'commit' ) {
@@ -67,11 +125,21 @@ class Controller implements ControllerProviderInterface {
 			foreach ($arq as $in => $item) {
 				$arqAdd[] = $app['dir_repo'] . $repositorio . "/" . trim($item['arq']);
 			}
+
 			$repo->setenv('GIT_COMMITTER_NAME', "DanCassiano");
 			$repo->setenv('GIT_AUTHOR_NAME', "DanCassiano");
 
 			$repo->setenv('GIT_COMMITTER_EMAIL', "jordan_gnr@hotmail.com");
 			$repo->setenv('GIT_AUTHOR_EMAIL', "jordan_gnr@hotmail.com");
+
+			$user = $app['session']->get('usuario');
+			// $app['session']->set('senha', $senha  );
+			$repo->setenv('GIT_COMMITTER_NAME', $user);
+			$repo->setenv('GIT_AUTHOR_NAME', $user);
+
+			$repo->setenv('GIT_COMMITTER_EMAIL', "dan.silvestre.cassino@gmail.com");
+			$repo->setenv('GIT_AUTHOR_EMAIL', "dan.silvestre.cassino@gmail.com");
+
 		
 			$repo->add( $arqAdd );
 			$d = $repo->commit( trim($titulo). " \n " . trim($message), false );
@@ -86,10 +154,6 @@ class Controller implements ControllerProviderInterface {
 		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') 
 			\Git\Git::windows_mode();
 		$repo = \Git\Git::open( $app['dir_repo']  . $repositorio );
-		// 		3=> array('config', "--global user.name='DanCassiano' "),
-			// 4=> array('config', "--global user.email='jordan_gnr@hotmail.com'"),
-		$repo->setenv('config', "--global user.name='DanCassiano' ");
-		$repo->setenv('config', "--global user.email='jordan_gnr@hotmail.com' ");
 
 		if( $funcao == 'status') {
 			$status = $repo->status(false, "-s", true);
@@ -106,7 +170,25 @@ class Controller implements ControllerProviderInterface {
 		}
 	}
 
+	public function login( Application $app, Request $request) {
 
+		parse_str($request->getContent(), $data);
+		$request->request->replace(is_array($data) ? $data : array());
+		$usuario = $request->request->get('usuario');
+		$senha = $request->request->get('senha');
+
+		$r =$app['db']->fetchAll("SELECT id, nome FROM usuario WHERE login='{$usuario}' AND senha='{$senha}'");
+		if( $r ){
+			$app['session']->set('user', $r[0] );
+		}
+		return $app->redirect('/');
+	}
+
+	public function logout(Application $app, Request $request){
+		
+		$app['session']->remove('user' );
+		return $app->redirect('/');
+	}
 
 	private function getPager( $dir, $dados ) {
 		ob_start();

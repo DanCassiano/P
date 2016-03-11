@@ -9,13 +9,31 @@
 			<a class="navbar-brand" href="">Home</a>
 			<span class="navbar-brand" ><?= $nome ?></span>
 		<?php }else{  ?>
-		<a class="navbar-brand" href="index.php">Pit</a>
+		<a class="navbar-brand" href="index.php">Gumball</a>
 		<?php } ?>
 		
-		
-
-	<!-- Collect the nav links, forms, and other content for toggling -->
+		<?php if( !empty($usuario)){ ?>
+		<div class="collapse navbar-collapse navbar-right" id="colapseUser">
+			<ul class="nav navbar-nav navbar-right">
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+					<img src="assets/imagens/user.png" class="img-circle" width="24" height="24"> 
+					<?=$usuario ?>
+					<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+							<!-- <li class="dropdown-header">Usuário</li> -->
+							<!-- <li role="separator" class="divider"></li> -->
+							<li>
+								<a href="logout">Sair</a>
+							</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+		<?php } ?>
 		<div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
+
 		<?php 
 		if( !empty($repo))
 		{

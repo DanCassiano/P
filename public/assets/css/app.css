@@ -53,3 +53,16 @@
 #commiter {
 	width: 100%;
 }
+
+.panel-login {
+	width: 320px;
+	margin: 10% auto;
+}
+
+.navbar {
+	border-bottom: 1px solid #e8e8e8;
+}
+
+.list-group-item {
+	border-radius: 0 !important;
+}

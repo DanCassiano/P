@@ -13,7 +13,7 @@
 	<div class="row">
 		<input type="hidden" id="hiddenNome" value="<?=$nome ?>">
 		<div class="col-md-8">
-			<?php 
+			<?php 				
 				if( !empty( $path ))
 					if( is_dir( $dir_repo . "/". $path ))
 					{
@@ -32,6 +32,7 @@
 				}
 				
 				$i = -1;
+				
 				foreach ($files as $file) {
 					if (!in_array($file, $exclude_files)) {
 
@@ -41,11 +42,12 @@
 							$icone = 'glyphicon-file';
 
 						$p = pathinfo( $file );
-						echo '<a href="repositorio/' . $nome .'?path='. ( $path !== null ? $path ."/" : "" ). $p['filename'].'" rel='.$i.'  class="list-group-item" > <i class="glyphicon ' . $icone . '"></i> '.utf8_encode($p['filename']);
+						$nomeArquivo = $p['filename'] . ( empty($p['extension']) ? "" : "." . $p['extension'] );
+						echo '<a href="repositorio/' . $nome .'?path='. ( $path !== null ? $path ."/" : "" ). $p['filename'].'" rel='.$i.'  class="list-group-item" > <i class="glyphicon ' . $icone . '"></i> '.$nomeArquivo;
 						if (file_exists($file)) {
 							echo '<span class="badge">'. date ("d/m/Y", filemtime($file)) .'</span>';
 						}
-						echo '<span class="text-muted pull-right">' .$repo->run("log --pretty=tformat:%s  -n1 {$file}") . "&nbsp;&nbsp;&nbsp;</span>";
+						echo '<span class="text-muted pull-right">' .$repo->run("log --pretty=tformat:%s  -n1 -- {$nomeArquivo}") . "&nbsp;&nbsp;&nbsp;</span>";
 						echo '</a>';
 					}
 				$i++;
