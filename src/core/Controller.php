@@ -15,6 +15,7 @@ class Controller implements ControllerProviderInterface {
 		$factory->get('/cadastro','Core\Controller::cadastro');
 
 		$factory->get('repositorio/{nome}','Core\Controller::repositorio');
+		$factory->get('repositorio-view/{nome}','Core\Controller::repositorio_view');
 		
 
 		$factory->get('config','Core\Controller::config');
@@ -92,6 +93,25 @@ class Controller implements ControllerProviderInterface {
 
 		$dados = array("titulo"=> "Gumball - " . $nome, 
 						"action" => "repositorio", 
+						'dir_repo'=> $app['dir_repo'] . $nome , 
+						"baseURL"=> $app['request']->getSchemeAndHttpHost(), 
+						'nome' => $nome,
+						'path'=> $app['request']->get('path'),
+						'view'=> $app['request']->get('view'),
+						'repo'=> $repo,
+						"usuario"=> $user['nome'] );
+		return $this->getPager( $app['dir'], $dados );
+	}
+
+	public function repositorio_view( Application $app, $nome){
+
+		$repo = \Git\Git::open( $app['dir_repo'] . $nome );
+
+		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') 
+			\Git\Git::windows_mode();
+		$user = $app['session']->get('user');
+		$dados = array("titulo"=> "Gumball - " . $nome, 
+						"action" => "repositorio_view", 
 						'dir_repo'=> $app['dir_repo'] . $nome , 
 						"baseURL"=> $app['request']->getSchemeAndHttpHost(), 
 						'nome' => $nome,
