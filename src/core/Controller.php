@@ -16,7 +16,6 @@ class Controller implements ControllerProviderInterface {
 
 		$factory->get('repositorio/{nome}','Core\Controller::repositorio');
 		$factory->get('repositorio-view/{nome}','Core\Controller::repositorio_view');
-		
 
 		$factory->get('config','Core\Controller::config');
 		$factory->post('config','Core\Controller::saveConfig');
@@ -27,9 +26,10 @@ class Controller implements ControllerProviderInterface {
 		$factory->post('login','Core\Controller::login');
 		$factory->get('logout','Core\Controller::logout');
 
-	return $factory;
+		return $factory;
 	}
 	public function home( Application $app ) {
+
 
 		$action = "index";
 		$user = $app['session']->get('user');
@@ -55,6 +55,7 @@ class Controller implements ControllerProviderInterface {
 						'repo'=>"");
 		return $this->getPager( $app['dir'], $dados );
 	}
+
 
 	public function config( Application $app ){
 		$ini = new Ini( "../app.ini");
@@ -122,6 +123,7 @@ class Controller implements ControllerProviderInterface {
 		return $this->getPager( $app['dir'], $dados );
 	}
 
+
 	public function action(Application $app, Request $request, $funcao, $repositorio ){
 		if( $funcao == 'commit' ) {
 			
@@ -129,6 +131,8 @@ class Controller implements ControllerProviderInterface {
 
 			if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') 
 				\Git\Git::windows_mode();
+
+			
 
 			$data = json_decode($request->getContent(), true);
 			
@@ -142,13 +146,14 @@ class Controller implements ControllerProviderInterface {
 				$arqAdd[] = $app['dir_repo'] . $repositorio . "/" . trim($item['arq']);
 			}
 
-			$user = $app['session']->get('user');
+
 			// $app['session']->set('senha', $senha  );
 			$repo->setenv('GIT_COMMITTER_NAME', $user['nome']);
 			$repo->setenv('GIT_AUTHOR_NAME', $user['nome']);
 
 			$repo->setenv('GIT_COMMITTER_EMAIL', "dan.silvestre.cassino@gmail.com");
 			$repo->setenv('GIT_AUTHOR_EMAIL', "dan.silvestre.cassino@gmail.com");
+
 		
 			$repo->add( $arqAdd );
 			$d = $repo->commit( trim($titulo). " \n " . trim($message), false );
@@ -163,7 +168,6 @@ class Controller implements ControllerProviderInterface {
 		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') 
 			\Git\Git::windows_mode();
 		$repo = \Git\Git::open( $app['dir_repo']  . $repositorio );
-	
 
 		if( $funcao == 'status') {
 			$status = $repo->status(false, "-s", true);
